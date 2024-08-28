@@ -40,6 +40,7 @@ jobs:
         run: |
           bundle exec rake rswag:ui:copy_assets[public/api-docs]
           cp -r public/api-docs/* public/
+          cp spec/swagger/v1/swagger.yaml public/api-docs/v1/swagger.yaml
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
