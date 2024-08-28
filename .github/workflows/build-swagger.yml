@@ -37,7 +37,9 @@ jobs:
         env:
           RAILS_ENV: development
           RAILS_MASTER_KEY: dummy
-        run: bundle exec rake rswag:ui:copy_assets[public/api-docs]
+        run: |
+          bundle exec rake rswag:ui:copy_assets[public/api-docs]
+          cp -r public/api-docs public
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
