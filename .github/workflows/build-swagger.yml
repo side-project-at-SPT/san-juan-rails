@@ -48,6 +48,7 @@ jobs:
           RAILS_MASTER_KEY: dummy
           ADD_ZEABUR_SERVER: true
         run: |
+          bundle exec rake rswag:specs:swaggerize
           mkdir -p public/api-docs/v1
           cp swagger/v1/swagger.yaml public/api-docs/v1/swagger.yaml
       - name: Upload artifact
