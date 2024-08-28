@@ -27,7 +27,7 @@ RSpec.configure do |config|
           url: 'http://localhost:3000',
           description: 'Development environment'
         }
-      ]
+      ].concat([ ENV.fetch('ADD_ZEABUR_SERVER', nil) ? { url: 'https://spt-games-san-juan.zeabur.app', description: 'Production environment at Zeabur' } : nil ].compact)
     }
   }
 
