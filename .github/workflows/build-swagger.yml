@@ -36,8 +36,8 @@ jobs:
       - name: Generate UI assets for Swagger
         env:
           RAILS_ENV: test
-          RAILS_MASTER_KEY: dummy
-          ADD_ZEABUR_SERVER: true
+          SECRET_KEY_BASE_DUMMY: 1
+          ADD_ZEABUR_SERVER: 1
         run: |
           bundle exec rake rswag:ui:copy_assets[public/api-docs]
           cp -r public/api-docs/* public/
@@ -45,8 +45,8 @@ jobs:
       - name: Generate Swagger YAML
         env:
           RAILS_ENV: test
-          RAILS_MASTER_KEY: dummy
-          ADD_ZEABUR_SERVER: true
+          SECRET_KEY_BASE_DUMMY: 1
+          ADD_ZEABUR_SERVER: 1
         run: |
           bundle exec rake rswag:specs:swaggerize
           mkdir -p public/api-docs/v1
