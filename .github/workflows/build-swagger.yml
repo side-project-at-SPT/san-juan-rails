@@ -41,9 +41,15 @@ jobs:
         run: |
           bundle exec rake rswag:ui:copy_assets[public/api-docs]
           cp -r public/api-docs/* public/
+          mv public/generated_swagger_index.html public/index.html
+      - name: Generate Swagger YAML
+        env:
+          RAILS_ENV: test
+          RAILS_MASTER_KEY: dummy
+          ADD_ZEABUR_SERVER: true
+        run: |
           mkdir -p public/api-docs/v1
           cp swagger/v1/swagger.yaml public/api-docs/v1/swagger.yaml
-          mv public/generated_swagger_index.html public/index.html
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
