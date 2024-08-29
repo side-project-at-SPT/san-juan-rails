@@ -10,4 +10,4 @@ Rswag::Api.configure do |c|
   # For example, you could leverage this to dynamically assign the "host" property
   #
   # c.swagger_filter = lambda { |swagger, env| swagger['host'] = env['HTTP_HOST'] }
-end
+end unless Rails.env.production?
