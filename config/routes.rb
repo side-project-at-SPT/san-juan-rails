@@ -7,6 +7,7 @@ Rails.application.routes.draw do
         member do
           put "players", to: "game#join_game"
           put "ready", to: "game#set_player_ready"
+          post "select-role-card", to: "game#select_role_card"
         end
       end
     end

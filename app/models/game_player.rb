@@ -21,6 +21,6 @@ class GamePlayer < ApplicationRecord
   end
 
   def start_game
-    game.status_playing!
+    game.setup!
   end
 end

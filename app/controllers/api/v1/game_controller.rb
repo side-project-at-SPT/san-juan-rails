@@ -1,6 +1,6 @@
 class Api::V1::GameController < ApplicationController
-  before_action :find_player, only: [ :create, :join_game, :set_player_ready ]
-  before_action :find_game, only: [ :join_game, :set_player_ready ]
+  before_action :find_player, only: [ :create, :join_game, :set_player_ready, :select_role_card ]
+  before_action :find_game, only: [ :join_game, :set_player_ready, :select_role_card ]
   before_action :find_game_player, only: [ :set_player_ready ]
 
   def create
@@ -31,6 +31,17 @@ class Api::V1::GameController < ApplicationController
   def set_player_ready
     @game_player.ready!
     head :no_content
+  end
+
+  def select_role_card
+    @game.player_select_role_card(@player, params[:role_card])
+    if @game.errors.any?
+      render json: {
+        message: @game.errors.full_messages
+      }, status: :unprocessable_entity
+    else
+      head :no_content
+    end
   end
 
   private

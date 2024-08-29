@@ -15,7 +15,7 @@
             "id": 1,
             "username": "player1",
             "ready": false
-            }
+          }
         ]
       }
       ```
@@ -95,7 +95,7 @@
       }
       ```
 5. As a user, I can CHOOSE a role_card if is my turn. (use prospector as example)
-   1. `POST /api/v1/game/:id/select-role_card`
+   1. `POST /api/v1/game/:id/select-role-card`
    2. body `{ "username": "player1", "role_card": "prospector" }`
    3. response `204 No Content`
    4. game // player1 chosen prospector and ready to execute action

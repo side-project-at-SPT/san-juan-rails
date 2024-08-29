@@ -142,4 +142,58 @@ RSpec.describe 'Api::V1::Game', type: :request do
       expect(game.reload.status).to eq('playing')
     end
   end
+
+  # As a user, I can CHOOSE a role_card if is my turn. (use prospector as example)
+  path '/api/v1/game/{id}/select-role-card' do
+    post 'Select role_card' do
+      tags 'Game'
+      description <<~DESC
+        Limitations:
+        - (Required) Provide a username as the player who selects the role_card
+        - (Required) Provide the role_card to be selected
+      DESC
+      consumes 'application/json'
+      parameter name: :id, in: :path, type: :integer
+      parameter name: :payload, in: :body, schema: {
+        type: :object,
+        properties: {
+          username: { type: :string },
+          role_card: { type: :string }
+        },
+        required: [ 'username', 'role_card' ]
+      }
+
+      let(:game) { Game.create(name: 'game1') }
+      let(:id) { game.id }
+      let(:user) { Player.create(username: 'player1') }
+
+      response '204', 'player selected role_card' do
+        let(:payload) { { username: 'player1', role_card: 'prospector' } }
+        before do
+          game.players << user
+          game.setup!
+        end
+
+        run_test! do |response|
+          expect(response.body).to be_empty
+
+          game.reload
+
+          expect(game.game_data['available_role_cards'][payload[:role_card].to_s]).to be_falsey
+          expect(game.game_data['players'].find { |p| p['id'] == user.id }['role_card']).to eq(payload[:role_card])
+        end
+      end
+
+      response '404', 'game not found' do
+        let(:id) { 0 }
+        let(:payload) { nil }
+        run_test!
+      end
+
+      response '422', 'you are not in this game' do
+        let(:payload) { { username: 'player2', role_card: 'prospector' } }
+        run_test!
+      end
+    end
+  end
 end
