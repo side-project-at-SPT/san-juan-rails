@@ -3,7 +3,9 @@ Rails.application.routes.draw do
     namespace :v1 do
       match "walking-skeleton", to: "walking_skeleton#show", via: :all
 
-      resources :game, only: [ :create ]
+      resources :game, only: [ :create ] do
+        put "players", to: "game#join_game", on: :member
+      end
     end
   end
 

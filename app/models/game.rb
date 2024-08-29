@@ -1,10 +1,10 @@
 class Game < ApplicationRecord
+  MAX_PLAYERS = 4
+
   has_many :game_players, dependent: :destroy
   has_many :players, through: :game_players
 
   before_validation :set_default_name
-
-  validate :player_less_or_equal_to_four
 
   enum :status, {
     waiting: 0,
@@ -12,15 +12,13 @@ class Game < ApplicationRecord
     finished: 2
   }, prefix: true
 
+  def full?
+    players.length >= MAX_PLAYERS
+  end
+
   private
 
   def set_default_name
     self.name ||= "#{Faker::Games::Minecraft.biome}"
-  end
-
-  def player_less_or_equal_to_four
-    if players.length > 4
-      errors.add(:players, "must be less than or equal to four")
-    end
   end
 end

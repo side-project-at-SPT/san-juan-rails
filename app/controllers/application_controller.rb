@@ -3,6 +3,10 @@ class ApplicationController < ActionController::API
 
   before_action :reject_if_not_json_request
 
+  rescue_from ActiveRecord::RecordNotFound do |exception|
+    render json: { message: exception.message }, status: :not_found
+  end
+
   private
 
   def reject_if_not_json_request
