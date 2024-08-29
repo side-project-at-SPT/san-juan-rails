@@ -125,4 +125,21 @@ RSpec.describe 'Api::V1::Game', type: :request do
       end
     end
   end
+
+  context 'Game should START automatically when all players are READY' do
+    let(:game) { Game.create }
+
+    before do
+      4.times { |i| game.players << Player.create(username: "player#{i}") }
+      3.times { |i| Player.find_by(username: "player#{i}").game_players.find_by(game: game).ready! }
+    end
+
+    it 'should start the game' do
+      expect(game.reload.status).to eq('waiting')
+
+      Player.find_by(username: "player#{3}").game_players.find_by(game: game).ready!
+
+      expect(game.reload.status).to eq('playing')
+    end
+  end
 end
