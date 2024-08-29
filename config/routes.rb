@@ -2,6 +2,8 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       match "walking-skeleton", to: "walking_skeleton#show", via: :all
+
+      resources :game, only: [ :create ]
     end
   end
 
