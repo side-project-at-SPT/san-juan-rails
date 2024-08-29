@@ -45,7 +45,7 @@ RSpec.describe 'Api::V1::Game', type: :request do
       tags 'Game'
       description <<~DESC
         Limitations:
-        - (Required) Provide a username as the player joining the game
+        - (Required) Provide a username as the player who joins the game
       DESC
       consumes 'application/json'
       parameter name: :id, in: :path, type: :integer
@@ -74,6 +74,53 @@ RSpec.describe 'Api::V1::Game', type: :request do
 
       response '422', 'invalid request' do
         let(:payload) { { username: '' } }
+        run_test!
+      end
+    end
+  end
+
+  path '/api/v1/game/{id}/ready' do
+    put 'Set player ready' do
+      tags 'Game'
+      description <<~DESC
+        Limitations:
+        - (Required) Provide a username as the player who sets ready
+      DESC
+      consumes 'application/json'
+      parameter name: :id, in: :path, type: :integer
+      parameter name: :payload, in: :body, schema: {
+        type: :object,
+        properties: {
+          username: { type: :string }
+        },
+        required: [ 'username' ]
+      }
+
+      let(:game) { Game.create(name: 'game1') }
+      let(:id) { game.id }
+      let(:user) { Player.create(username: 'player1') }
+
+      response '204', 'player set ready' do
+        let(:payload) { { username: 'player1' } }
+        before do
+          game.players << user
+        end
+
+        run_test! do |response|
+          expect(response.body).to be_empty
+
+          expect(game.game_players.last.ready?).to be_truthy
+        end
+      end
+
+      response '404', 'game not found' do
+        let(:id) { 0 }
+        let(:payload) { nil }
+        run_test!
+      end
+
+      response '422', 'you are not in this game' do
+        let(:payload) { { username: 'player2' } }
         run_test!
       end
     end

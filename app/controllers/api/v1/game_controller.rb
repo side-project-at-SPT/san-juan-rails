@@ -1,6 +1,7 @@
 class Api::V1::GameController < ApplicationController
-  before_action :find_player, only: [ :create, :join_game ]
-  before_action :find_game, only: [ :join_game ]
+  before_action :find_player, only: [ :create, :join_game, :set_player_ready ]
+  before_action :find_game, only: [ :join_game, :set_player_ready ]
+  before_action :find_game_player, only: [ :set_player_ready ]
 
   def create
     @game = @player.create_game
@@ -27,6 +28,11 @@ class Api::V1::GameController < ApplicationController
     end
   end
 
+  def set_player_ready
+    @game_player.ready!
+    head :no_content
+  end
+
   private
 
   def game_params
@@ -39,5 +45,16 @@ class Api::V1::GameController < ApplicationController
 
   def find_player
     @player = Player.find_or_create_by(username: params[:username])
+  end
+
+  def find_game_player
+    if @game.player_ids.exclude?(@player.id)
+      render json: {
+        message: "You are not in this game"
+      }, status: :unprocessable_entity
+      nil
+    else
+      @game_player = GamePlayer.find([ @game.id, @player.id ])
+    end
   end
 end

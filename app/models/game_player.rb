@@ -6,6 +6,10 @@ class GamePlayer < ApplicationRecord
 
   validate :game_player_number_constraint, on: :create
 
+  def ready!
+    update!(ready: true)
+  end
+
   private
 
   def game_player_number_constraint
