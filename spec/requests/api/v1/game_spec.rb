@@ -38,4 +38,43 @@ RSpec.describe 'Api::V1::Game', type: :request do
       end
     end
   end
+
+  path '/api/v1/game/{id}/players' do
+    put 'Join a game' do
+      tags 'Game'
+      description <<~DESC
+        Limitations:
+        - (Required) Provide a username as the player joining the game
+      DESC
+      consumes 'application/json'
+      parameter name: :id, in: :path, type: :integer
+      parameter name: :username, in: :body, schema: {
+        type: :object,
+        properties: {
+          username: { type: :string }
+        },
+        required: [ 'username' ]
+      }
+
+      response '200', 'player joined game' do
+        let(:game) { Game.create(name: 'game1') }
+        let(:id) { game.id }
+        let(:username) { { username: 'player2' } }
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data['game_id']).to eq(game.id)
+
+          game.reload
+          expect(game.players.pluck(:username)).to eq([ 'player2' ])
+        end
+      end
+
+      response '422', 'invalid request' do
+        let(:game) { Game.create(name: 'game1') }
+        let(:id) { game.id }
+        let(:username) { { username: '' } }
+        run_test!
+      end
+    end
+  end
 end

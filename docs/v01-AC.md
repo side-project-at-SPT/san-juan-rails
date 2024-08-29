@@ -155,10 +155,13 @@
 - Game
   - id: number (auto increment)
   - name: string
-  - status: enum('waiting', 'playing', 'end')
-  - current_player_id: number
-  - winner: string
-  - players: Player[]
+  - status: enum('waiting', 'playing', 'finished')
+  - game_config: json
+  - game_data: json
+    - current_player_id: number
+    - winner: string
+  - players: lookup through GamePlayer
+  - game_players: lookup through GamePlayer -> use to check the player is ready or not
 - Player
   - id: number (auto increment)
   - username: string (unique)
