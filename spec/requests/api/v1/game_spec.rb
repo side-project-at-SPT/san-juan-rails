@@ -126,7 +126,7 @@ RSpec.describe 'Api::V1::Game', type: :request do
     end
   end
 
-  context 'Game should START automatically when all players are READY' do
+  context 'Game should START automatically when all players are READY.' do
     let(:game) { Game.create }
 
     before do

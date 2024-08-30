@@ -121,16 +121,16 @@
         ]
       }
       ```
-6. As a system, Game should END if game over condition is met.
+6. As a system, Game should FINISH if game over condition is met.
    1. Given a game with 2 players, player1 selected prospector.
    2. When player1 execute prospector action.
-   3. Then the game should end. (met the game over condition)
+   3. Then the game should finish. (met the game over condition)
    4. game
       ```json
       {
         "id": 1,
         "name": "game_name",
-        "status": "end",
+        "status": "finished",
         "current_player_id": null,
         "winner": null,
         "players": [

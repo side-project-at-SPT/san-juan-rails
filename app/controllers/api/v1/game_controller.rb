@@ -36,12 +36,14 @@ class Api::V1::GameController < ApplicationController
   def select_role_card
     @game.player_select_role_card(@player, params[:role_card])
     if @game.errors.any?
-      render json: {
+      return render json: {
         message: @game.errors.full_messages
       }, status: :unprocessable_entity
-    else
-      head :no_content
     end
+
+    @game.begin_phase!(@player, params[:role_card])
+
+    head :no_content
   end
 
   private
